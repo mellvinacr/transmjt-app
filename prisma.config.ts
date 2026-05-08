@@ -9,6 +9,7 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    // Kalau DATABASE_URL kosong, dia pakai string dummy biar nggak error pas build
+    url: process.env["DATABASE_URL"] || "mysql://user:pass@localhost:3306/db",
   },
 });
