@@ -21,22 +21,32 @@ export default function Login() {
                 body: JSON.stringify(data),
             });
 
+            // AMBIL JSON CUKUP SEKALI DI SINI
             const result = await res.json();
 
-            // Di dalam fungsi handleLogin
             if (res.ok) {
-                const data = await res.json();
-                localStorage.setItem('userName', data.nama);
-                localStorage.setItem('userRole', data.role); // Simpan role
+                // Pastikan akses datanya sesuai dengan struktur return backend
+                // Backend tadi kirim: { user: { nama: "..." }, message: "..." }
+                const userNama = result.user?.nama || "User";
+                const userRole = result.user?.role || "USER";
 
-                if (data.role === 'ADMIN') {
-                    router.push('/admin'); // Redirect ke halaman admin
+                localStorage.setItem('userName', userNama);
+                localStorage.setItem('userRole', userRole);
+
+                alert("Verifikasi Berhasil! Selamat Datang di Metro Jabar Trans.");
+
+                if (userRole === 'ADMIN') {
+                    window.location.href = '/admin';
                 } else {
-                    router.push('/dashboard'); // User biasa ke dashboard
+                    window.location.href = '/dashboard';
                 }
+            } else {
+                // Tampilkan pesan error dari backend (misal: Email/Password salah)
+                alert(result.error || "Login Gagal! Cek kembali akun Anda.");
             }
         } catch (err) {
-            alert("Gagal koneksi ke database RDS!");
+            console.error("Login Error:", err);
+            alert("Gagal koneksi ke database RDS! Pastikan koneksi internet stabil.");
         } finally {
             setLoading(false);
         }
@@ -55,13 +65,13 @@ export default function Login() {
                     <input name="email" type="email" placeholder="Email" className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-sm font-bold outline-none focus:ring-2 focus:ring-[#D4AF37]" required />
                     <input name="password" type="password" placeholder="Password" className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-sm font-bold outline-none focus:ring-2 focus:ring-[#D4AF37]" required />
 
-                    <button type="submit" disabled={loading} className="w-full bg-[#008444] text-white py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-lg hover:scale-[1.02] transition-all disabled:opacity-50">
+                    <button type="submit" disabled={loading} className="w-full bg-[#008444] text-white py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-lg hover:scale-[1.02] transition-all active:scale-95 disabled:opacity-50">
                         {loading ? "VERIFIKASI RDS..." : "MASUK KE APLIKASI"}
                     </button>
                 </form>
 
                 <p className="mt-8 text-center text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                    Belum terdaftar? <Link href="/register" className="text-[#008444] underline">Buat akun baru</Link>
+                    Belum terdaftar? <Link href="/register" className="text-[#008444] underline font-bold">Buat akun baru</Link>
                 </p>
             </div>
         </div>

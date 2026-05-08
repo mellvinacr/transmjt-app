@@ -19,12 +19,20 @@ export default function Register() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
             });
+            
+            const result = await res.json(); // Ambil pesan dari backend
+
             if (res.ok) {
-                // Langsung pindah ke login biar user bisa masuk
-                router.push('/login');
+                alert("Registrasi Berhasil! Data sudah masuk ke Cloud RDS.");
+                // Gunakan window.location agar refresh total ke halaman login
+                window.location.href = '/login';
+            } else {
+                // Tampilkan pesan error spesifik dari backend
+                alert(result.error || "Gagal Register ke RDS!");
             }
         } catch (err) {
-            alert("Error Register!");
+            console.error(err);
+            alert("Terjadi kesalahan koneksi ke server!");
         } finally {
             setLoading(false);
         }
