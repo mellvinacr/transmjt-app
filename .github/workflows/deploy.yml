@@ -26,5 +26,5 @@ jobs:
         id: build-image
         run: |
           docker build -t transmjt-app .
-          docker tag transmjt-app:latest ${{ steps.login-ecr.outputs.registry }}/transmjt-repo:latest
-          docker push ${{ steps.login-ecr.outputs.registry }}/transmjt-repo:latest
+          docker tag transmjt-app:latest ${{ steps.login-ecr.outputs.registry }}/transmjt-app:latest
+          docker push ${{ steps.login-ecr.outputs.registry }}/transmjt-app:latest
